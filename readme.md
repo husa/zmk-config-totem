@@ -16,7 +16,7 @@ TOTEM is a 38 key column-staggered split keyboard running [ZMK](https://zmk.dev/
 
 ## KEYMAP
 
-![TOTEM keymap](https://github.com/husa/zmk-config-totem/releases/latest/download/keymap.svg)
+![TOTEM keymap](https://github.com/husa/zmk-config-totem/releases/latest/download/keymap.png)
 
 ## HOW TO USE
 
