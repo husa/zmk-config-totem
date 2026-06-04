@@ -3,3 +3,39 @@ on: [push, pull_request, workflow_dispatch]
 jobs:
   build:
     uses: zmkfirmware/zmk/.github/workflows/build-user-config.yml@main
+
+  release:
+    needs: build
+    # Only publish on pushes to master (and manual runs) — never for PRs/forks.
+    if: github.ref == 'refs/heads/master' && github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      # Firmware .uf2 files produced by the reusable build job above.
+      - uses: actions/download-artifact@v4
+        with:
+          name: firmware
+          path: firmware
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Draw keymap
+        run: |
+          pip install keymap-drawer
+          keymap parse -z config/totem.keymap > keymap.yaml
+          keymap draw keymap.yaml > keymap.svg
+
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "build-${{ github.run_number }}" \
+            firmware/*.uf2 keymap.svg keymap.yaml \
+            --target "$GITHUB_SHA" \
+            --title "Build ${{ github.run_number }}" \
+            --notes "TOTEM firmware and keymap image, built from \`$GITHUB_SHA\`."
