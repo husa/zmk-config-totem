@@ -67,7 +67,7 @@ label= "BASE"                              ;
 // ┏━━━━━━━━━━━╋━━━━━━━━━━━╋━━━━━━━━━━━╋━━━━━━━━━━━╋━━━━━━━━━━━╋━━━━━━━━━━━┫   ┣━━━━━━━━━━━╋━━━━━━━━━━━╋━━━━━━━━━━━╋━━━━━━━━━━━╋━━━━━━━━━━━╋━━━━━━━━━━━┓
 // ┃   SHFT    ┃     Z     ┃     X     ┃     C     ┃     V     ┃     B     ┃   ┃     N     ┃     M     ┃     ,     ┃     .     ┃     /     ┃     '     ┃
 // ┗━━━━━━━━━━━┻━━━━━━━━━━━┻━━━━━━━━━━━╋━━━━━━━━━━━╋━━━━━━━━━━━╋━━━━━━━━━━━┫   ┣━━━━━━━━━━━╋━━━━━━━━━━━╋━━━━━━━━━━━╋━━━━━━━━━━━┻━━━━━━━━━━━┻━━━━━━━━━━━┛
-//                                     ┃    DEL    ┃    TAB    ┃    SPC    ┃   ┃   ENTER   ┃           ┃   BSPC    ┃
+//                                     ┃    TAB    ┃  DEL/NAV  ┃    SPC    ┃   ┃   ENTER   ┃  BSPC/SYM ┃    ESC    ┃
 //                                     ┗━━━━━━━━━━━┻━━━━━━━━━━━┻━━━━━━━━━━━┛   ┗━━━━━━━━━━━┻━━━━━━━━━━━┻━━━━━━━━━━━┛
  bindings = <
 // ╷           ╷           ╷           ╷           ╷           ╷           ╷   ╷           ╷           ╷           ╷           ╷           ╷           ╷
@@ -75,7 +75,7 @@ label= "BASE"                              ;
                 &kp Q       &kp W       &kp E       &kp R       &kp T           &kp Y       &kp U       &kp I       &kp O       &kp P
                 &mt LSHFT A &mt LCTRL S &mt LALT D  &mt LGUI F  &mt LC(LS(LALT)) G   &mt RC(RS(RALT)) H  &mt RGUI J  &mt RALT K  &mt RCTRL L &mt RSHFT SEMI
     &kp LSHFT   &kp Z       &kp X       &kp C       &kp V       &kp B           &kp N       &kp M       &kp COMMA   &kp DOT     &kp FSLH    &kp SQT
-                                        &kp DEL   &lt NAV TAB   &kp SPACE       &kp RET   &lt SYM ESC   &kp BSPC
+                                        &kp TAB     &lt NAV DEL &kp SPACE       &kp RET   &lt SYM BSPC   &kp ESC
                         >;
                 };
 
@@ -93,7 +93,7 @@ label= "NAV"                              ;
 // ┏━━━━━━━━━━━╋━━━━━━━━━━━╋━━━━━━━━━━━╋━━━━━━━━━━━╋━━━━━━━━━━━╋━━━━━━━━━━━┫   ┣━━━━━━━━━━━╋━━━━━━━━━━━╋━━━━━━━━━━━╋━━━━━━━━━━━╋━━━━━━━━━━━╋━━━━━━━━━━━┓
 // ┃           ┃    F13    ┃           ┃           ┃           ┃           ┃   ┃   GUI←    ┃   ALT←    ┃   ALT→    ┃   GUI→    ┃           ┃           ┃
 // ┗━━━━━━━━━━━┻━━━━━━━━━━━┻━━━━━━━━━━━╋━━━━━━━━━━━╋━━━━━━━━━━━╋━━━━━━━━━━━┫   ┣━━━━━━━━━━━╋━━━━━━━━━━━╋━━━━━━━━━━━╋━━━━━━━━━━━┻━━━━━━━━━━━┻━━━━━━━━━━━┛
-//                                     ┃           ┃           ┃           ┃   ┃   MEDIA   ┃           ┃           ┃
+//                                     ┃           ┃           ┃           ┃   ┃           ┃   MEDIA   ┃           ┃
 //                                     ┗━━━━━━━━━━━┻━━━━━━━━━━━┻━━━━━━━━━━━┛   ┗━━━━━━━━━━━┻━━━━━━━━━━━┻━━━━━━━━━━━┛
  bindings = <
 // ╷           ╷           ╷           ╷           ╷           ╷           ╷   ╷           ╷           ╷           ╷           ╷           ╷           ╷
@@ -101,7 +101,7 @@ label= "NAV"                              ;
                 &kp N1      &kp N2      &kp N3      &kp N4      &kp N5          &kp N6      &kp N7      &kp N8      &kp N9      &kp N0
                 &none       &none       &none       &none       &none           &kp LEFT    &kp DOWN    &kp UP      &kp RIGHT   &none
     &trans      &kp F13     &none       &none       &none       &none           &kp LG(LEFT) &kp LA(LEFT) &kp LA(RIGHT) &kp LG(RIGHT) &none    &trans
-                                        &trans      &trans      &trans          &mo MEDIA     &trans      &trans
+                                        &trans      &trans      &trans          &trans      &mo MEDIA   &trans
                         >;
                 };
 
@@ -119,7 +119,7 @@ label= "SYM"                               ;
 // ┏━━━━━━━━━━━╋━━━━━━━━━━━╋━━━━━━━━━━━╋━━━━━━━━━━━╋━━━━━━━━━━━╋━━━━━━━━━━━┫   ┣━━━━━━━━━━━╋━━━━━━━━━━━╋━━━━━━━━━━━╋━━━━━━━━━━━╋━━━━━━━━━━━╋━━━━━━━━━━━┓
 // ┃     ~     ┃           ┃           ┃           ┃           ┃           ┃   ┃     _     ┃     +     ┃     |     ┃     {     ┃     }     ┃     `     ┃
 // ┗━━━━━━━━━━━┻━━━━━━━━━━━┻━━━━━━━━━━━╋━━━━━━━━━━━╋━━━━━━━━━━━╋━━━━━━━━━━━┫   ┣━━━━━━━━━━━╋━━━━━━━━━━━╋━━━━━━━━━━━╋━━━━━━━━━━━┻━━━━━━━━━━━┻━━━━━━━━━━━┛
-//                                     ┃           ┃           ┃   MEDIA   ┃   ┃           ┃           ┃           ┃
+//                                     ┃           ┃   MEDIA   ┃           ┃   ┃           ┃           ┃           ┃
 //                                     ┗━━━━━━━━━━━┻━━━━━━━━━━━┻━━━━━━━━━━━┛   ┗━━━━━━━━━━━┻━━━━━━━━━━━┻━━━━━━━━━━━┛
  bindings = <
 // ╷           ╷           ╷           ╷           ╷           ╷           ╷   ╷           ╷           ╷           ╷           ╷           ╷           ╷
@@ -127,7 +127,7 @@ label= "SYM"                               ;
                 &kp EXCL    &kp AT      &kp HASH    &kp DLLR    &kp PRCNT       &kp CARET   &kp AMPS    &kp ASTRK   &kp LPAR    &kp RPAR
                 &none       &none       &none       &none       &none           &kp MINUS   &kp EQUAL   &kp BSLH    &kp LBKT    &kp RBKT
     &kp TILDE   &none       &none       &none       &none       &none           &kp UNDER   &kp PLUS    &kp PIPE    &kp LBRC    &kp RBRC    &kp GRAVE
-                                        &trans      &trans      &mo MEDIA         &trans      &trans      &trans
+                                        &trans      &mo MEDIA   &trans          &trans      &trans      &trans
                         >;
                 };
 
