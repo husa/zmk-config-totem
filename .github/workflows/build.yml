@@ -6,7 +6,6 @@ jobs:
 
   release:
     needs: build
-    # Only publish on pushes to master (and manual runs) — never for PRs/forks.
     if: github.ref == 'refs/heads/master' && github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     permissions:
@@ -14,7 +13,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Firmware .uf2 files produced by the reusable build job above.
       - uses: actions/download-artifact@v4
         with:
           name: firmware
@@ -26,16 +24,18 @@ jobs:
 
       - name: Draw keymap
         run: |
+          sudo apt-get update && sudo apt-get install -y librsvg2-bin
           pip install keymap-drawer
           keymap parse -z config/totem.keymap > keymap.yaml
           keymap draw keymap.yaml > keymap.svg
+          rsvg-convert -z 2 keymap.svg -o keymap.png
 
       - name: Publish release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh release create "build-${{ github.run_number }}" \
-            firmware/*.uf2 keymap.svg keymap.yaml \
+            firmware/*.uf2 keymap.png keymap.svg keymap.yaml \
             --target "$GITHUB_SHA" \
             --title "Build ${{ github.run_number }}" \
             --notes "TOTEM firmware and keymap image, built from \`$GITHUB_SHA\`."
