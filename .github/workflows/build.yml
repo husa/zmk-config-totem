@@ -34,8 +34,9 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
+          DATETIME=$(date -u +'%Y-%m-%d %H:%M UTC')
           gh release create "build-${{ github.run_number }}" \
             firmware/*.uf2 keymap.png keymap.svg keymap.yaml \
             --target "$GITHUB_SHA" \
-            --title "Build ${{ github.run_number }}" \
+            --title "$DATETIME - Build ${{ github.run_number }}" \
             --notes "TOTEM firmware and keymap image, built from \`$GITHUB_SHA\`."
