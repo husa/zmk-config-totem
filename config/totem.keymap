@@ -154,20 +154,20 @@ label= "SYM"                               ;
 label= "MEDIA"                             ;
 // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
 //             ┏━━━━━━━━━━━┳━━━━━━━━━━━┳━━━━━━━━━━━┳━━━━━━━━━━━┳━━━━━━━━━━━┓   ┏━━━━━━━━━━━┳━━━━━━━━━━━┳━━━━━━━━━━━┳━━━━━━━━━━━┳━━━━━━━━━━━┓
-//             ┃   RESET   ┃ BT CLEAR  ┃  OUT TOG  ┃           ┃           ┃   ┃           ┃   MUTE    ┃   VOL-    ┃   VOL+    ┃           ┃
+//             ┃   RESET   ┃   BT 0    ┃  OUT TOG  ┃           ┃           ┃   ┃           ┃   MUTE    ┃   VOL-    ┃   VOL+    ┃           ┃
 //             ┣━━━━━━━━━━━╋━━━━━━━━━━━╋━━━━━━━━━━━╋━━━━━━━━━━━╋━━━━━━━━━━━┫   ┣━━━━━━━━━━━╋━━━━━━━━━━━╋━━━━━━━━━━━╋━━━━━━━━━━━╋━━━━━━━━━━━┫
-//             ┃ BOOTLOAD  ┃ BT NEXT   ┃           ┃           ┃           ┃   ┃           ┃   PREV    ┃   PLAY    ┃   NEXT    ┃           ┃
+//             ┃ BOOTLOAD  ┃   BT 1    ┃           ┃           ┃           ┃   ┃           ┃   PREV    ┃   PLAY    ┃   NEXT    ┃           ┃
 // ┏━━━━━━━━━━━╋━━━━━━━━━━━╋━━━━━━━━━━━╋━━━━━━━━━━━╋━━━━━━━━━━━╋━━━━━━━━━━━┫   ┣━━━━━━━━━━━╋━━━━━━━━━━━╋━━━━━━━━━━━╋━━━━━━━━━━━╋━━━━━━━━━━━╋━━━━━━━━━━━┓
-// ┃           ┃           ┃ BT PREV   ┃           ┃           ┃           ┃   ┃           ┃           ┃           ┃           ┃           ┃           ┃
+// ┃           ┃  BT CLR   ┃   BT 2    ┃           ┃           ┃           ┃   ┃           ┃           ┃           ┃           ┃           ┃           ┃
 // ┗━━━━━━━━━━━┻━━━━━━━━━━━┻━━━━━━━━━━━╋━━━━━━━━━━━╋━━━━━━━━━━━╋━━━━━━━━━━━┫   ┣━━━━━━━━━━━╋━━━━━━━━━━━╋━━━━━━━━━━━╋━━━━━━━━━━━┻━━━━━━━━━━━┻━━━━━━━━━━━┛
 //                                     ┃           ┃           ┃           ┃   ┃           ┃           ┃           ┃
 //                                     ┗━━━━━━━━━━━┻━━━━━━━━━━━┻━━━━━━━━━━━┛   ┗━━━━━━━━━━━┻━━━━━━━━━━━┻━━━━━━━━━━━┛
  bindings = <
 // ╷           ╷           ╷           ╷           ╷           ╷           ╷   ╷           ╷           ╷           ╷           ╷           ╷           ╷
 
-                &sys_reset  &bt BT_CLR &out OUT_TOG &studio_unlock &trans       &none       &kp C_MUTE  &kp C_VOL_DN &kp C_VOL_UP &none
-                &bootloader &bt BT_NXT  &trans      &trans      &trans          &none       &kp C_PREV  &kp C_PP    &kp C_NEXT  &none
-    &trans      &trans      &bt BT_PRV  &trans      &trans      &trans          &none       &none       &none       &none       &none       &trans
+                &sys_reset  &bt BT_SEL 0 &out OUT_TOG &studio_unlock &trans      &none       &kp C_MUTE  &kp C_VOL_DN &kp C_VOL_UP &none
+                &bootloader &bt BT_SEL 1 &trans      &trans      &trans         &none       &kp C_PREV  &kp C_PP    &kp C_NEXT  &none
+    &trans      &bt BT_CLR  &bt BT_SEL 2 &trans      &trans      &trans         &none       &none       &none       &none       &none       &trans
                                         &trans      &trans      &trans          &trans      &trans      &trans      
                         >;
                 };
