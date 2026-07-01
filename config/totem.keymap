@@ -45,12 +45,20 @@
                 bindings = <&kp ESC>;
                 layers = <BASE>; 
             };
-            combo_caps {
+            combo_capsword {
                 timeout-ms = <50>;
                 key-positions = <10 19>;
                 bindings = <&caps_word>;
                 layers = <BASE>;
             };
+    };
+
+    behaviors {
+      td_shift: td_shift {
+        compatible = "zmk,behavior-tap-dance";
+        #binding-cells = <0>;
+        bindings = <&kp LSHFT>, <&caps_word>;
+      };
     };
 
     macros {
@@ -89,7 +97,7 @@ label= "BASE"                              ;
 
                 &kp Q       &kp W       &kp E       &kp R       &kp T           &kp Y       &kp U       &kp I       &kp O       &kp P
                 &mt LSHFT A &mt LCTRL S &mt LALT D  &mt LGUI F  &mt LC(LS(LALT)) G   &mt RC(RS(RALT)) H &mt RGUI J  &mt RALT K  &mt RCTRL L &mt RSHFT SEMI
-    &kp LSHFT   &kp Z       &kp X       &kp C       &kp V       &kp B           &kp N       &kp M       &kp COMMA   &kp DOT     &kp FSLH    &mt RSHFT SQT
+    &td_shift   &kp Z       &kp X       &kp C       &kp V       &kp B           &kp N       &kp M       &kp COMMA   &kp DOT     &kp FSLH    &mt RSHFT SQT
                                         &kp LGUI    &lt NAV TAB &kp SPACE       &kp RET     &lt SYM BSPC &lt NUM ESC
                         >;
                 };
