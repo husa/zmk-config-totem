@@ -1,0 +1,12 @@
+config ZMK_USB_HID_STATUS
+    bool "Report battery and layer over a second USB HID interface"
+    default y
+    depends on ZMK_USB
+
+if ZMK_USB_HID_STATUS
+
+# ZMK's keyboard interface is HID_0, this module registers HID_1
+config USB_HID_DEVICE_COUNT
+    default 2
+
+endif
