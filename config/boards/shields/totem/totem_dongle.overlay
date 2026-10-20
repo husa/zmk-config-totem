@@ -8,12 +8,13 @@
 
 / {
     chosen {
-        zmk,kscan = &kscan_dongle;
+        zmk,kscan = &kscan0;
         zmk,physical-layout = &physical_layout0;
     };
 
     // The dongle has no switches; keys arrive from the halves over BLE.
-    kscan_dongle: kscan_dongle {
+    // Labeled kscan0 because totem_layouts.dtsi references &kscan0.
+    kscan0: kscan_0 {
         compatible = "zmk,kscan-mock";
         columns = <0>;
         rows = <0>;
