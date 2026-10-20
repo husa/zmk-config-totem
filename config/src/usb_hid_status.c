@@ -2,8 +2,10 @@
  * Vendor-defined USB HID interface reporting peripheral battery and active layer.
  *
  * Report 0x01: { percent[source] ... } one byte per peripheral, 0xFF = unknown
- * Report 0x02: { highest layer, layer state bitmask (u32 LE) }
+ * Report 0x02: { highest layer index, layer state bitmask (u32 LE), layer name (NUL-padded) }
  */
+
+#include <string.h>
 
 #include <zephyr/kernel.h>
 #include <zephyr/device.h>
@@ -25,6 +27,7 @@ LOG_MODULE_REGISTER(usb_hid_status, CONFIG_ZMK_LOG_LEVEL);
 #define REPORT_ID_LAYER 0x02
 
 #define MAX_SOURCES CONFIG_ZMK_SPLIT_BLE_CENTRAL_PERIPHERALS
+#define LAYER_NAME_LEN 16
 
 static const uint8_t report_desc[] = {
     0x06, 0x42, 0xFF, // Usage Page (Vendor 0xFF42)
@@ -41,7 +44,7 @@ static const uint8_t report_desc[] = {
 
     0x85, REPORT_ID_LAYER, //   Report ID
     0x09, 0x03,            //   Usage (3)
-    0x95, 0x05,            //   Report Count (5)
+    0x95, 5 + LAYER_NAME_LEN, //   Report Count (index, state u32, name)
     0x81, 0x02,            //   Input (Data, Var, Abs)
     0xC0,                  // End Collection
 };
@@ -57,6 +60,7 @@ struct layer_report {
     uint8_t id;
     uint8_t highest;
     uint32_t state;
+    char name[LAYER_NAME_LEN];
 } __packed;
 
 union status_report {
@@ -88,6 +92,12 @@ static void make_layer_report(union status_report *r) {
     r->layer.id = REPORT_ID_LAYER;
     r->layer.highest = zmk_keymap_highest_layer_active();
     r->layer.state = (uint32_t)zmk_keymap_layer_state();
+
+    const char *name = zmk_keymap_layer_name(zmk_keymap_layer_index_to_id(r->layer.highest));
+    memset(r->layer.name, 0, sizeof(r->layer.name));
+    if (name != NULL) {
+        strncpy(r->layer.name, name, sizeof(r->layer.name) - 1);
+    }
 }
 
 static void queue_report(const union status_report *r) {
