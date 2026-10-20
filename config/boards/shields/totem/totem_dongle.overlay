@@ -1,0 +1,22 @@
+/*
+ * Copyright (c) 2022 The ZMK Contributors
+ *
+ * SPDX-License-Identifier: MIT
+ */
+
+#include "totem_layouts.dtsi"
+
+/ {
+    chosen {
+        zmk,kscan = &kscan_dongle;
+        zmk,physical-layout = &physical_layout0;
+    };
+
+    // The dongle has no switches; keys arrive from the halves over BLE.
+    kscan_dongle: kscan_dongle {
+        compatible = "zmk,kscan-mock";
+        columns = <0>;
+        rows = <0>;
+        events = <0>;
+    };
+};

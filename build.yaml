@@ -1,7 +1,26 @@
 include:
+  # Standalone: left is central (USB), right is peripheral
   - board: xiao_ble//zmk
     shield: totem_left
     snippet: studio-rpc-usb-uart
+    artifact-name: totem_standalone_left
   - board: xiao_ble//zmk
     shield: totem_right
-# there is no settingsreset (needed) for the XIAO
+    artifact-name: totem_standalone_right
+
+  # Dongle: dongle is central (USB), both halves are peripherals
+  - board: xiao_ble//zmk
+    shield: totem_dongle
+    snippet: studio-rpc-usb-uart
+    artifact-name: totem_dongle
+  - board: xiao_ble//zmk
+    shield: totem_left
+    cmake-args: -DCONFIG_ZMK_SPLIT_ROLE_CENTRAL=n -DCONFIG_ZMK_STUDIO=n -DCONFIG_ZMK_SPLIT_BLE_CENTRAL_BATTERY_LEVEL_FETCHING=n -DCONFIG_ZMK_SPLIT_BLE_CENTRAL_BATTERY_LEVEL_PROXY=n
+    artifact-name: totem_dongle_left
+  - board: xiao_ble//zmk
+    shield: totem_right
+    artifact-name: totem_dongle_right
+
+  # Flash to all devices before switching between standalone and dongle mode (clears BLE bonds)
+  - board: xiao_ble//zmk
+    shield: settings_reset
