@@ -1,7 +1,7 @@
 config ZMK_USB_HID_STATUS
     bool "Report battery and layer over a second USB HID interface"
     default y
-    depends on ZMK_USB
+    depends on ZMK_USB && ZMK_SPLIT_BLE && ZMK_SPLIT_ROLE_CENTRAL
 
 if ZMK_USB_HID_STATUS
 
