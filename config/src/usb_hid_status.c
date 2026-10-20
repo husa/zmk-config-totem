@@ -3,6 +3,8 @@
  *
  * Report 0x01: { percent[source] ... } one byte per peripheral, 0xFF = unknown
  * Report 0x02: { highest layer index, layer state bitmask (u32 LE), layer name (NUL-padded) }
+ * Report 0x03: { selected transport, preferred transport, BLE profile (0xFF = n/a) }
+ *              transport: 0 = none, 1 = USB, 2 = BLE
  */
 
 #include <string.h>
@@ -16,6 +18,8 @@
 
 #include <zmk/event_manager.h>
 #include <zmk/events/battery_state_changed.h>
+#include <zmk/endpoints.h>
+#include <zmk/events/endpoint_changed.h>
 #include <zmk/events/layer_state_changed.h>
 #include <zmk/events/usb_conn_state_changed.h>
 #include <zmk/keymap.h>
@@ -25,6 +29,7 @@ LOG_MODULE_REGISTER(usb_hid_status, CONFIG_ZMK_LOG_LEVEL);
 
 #define REPORT_ID_BATTERY 0x01
 #define REPORT_ID_LAYER 0x02
+#define REPORT_ID_OUTPUT 0x03
 
 #define MAX_SOURCES CONFIG_ZMK_SPLIT_BLE_CENTRAL_PERIPHERALS
 #define LAYER_NAME_LEN 16
@@ -46,7 +51,12 @@ static const uint8_t report_desc[] = {
     0x09, 0x03,            //   Usage (3)
     0x95, 5 + LAYER_NAME_LEN, //   Report Count (index, state u32, name)
     0x81, 0x02,            //   Input (Data, Var, Abs)
-    0xC0,                  // End Collection
+
+    0x85, REPORT_ID_OUTPUT, //   Report ID
+    0x09, 0x04,             //   Usage (4)
+    0x95, 0x03,             //   Report Count (selected, preferred, BLE profile)
+    0x81, 0x02,             //   Input (Data, Var, Abs)
+    0xC0,                   // End Collection
 };
 
 #define BATTERY_UNKNOWN 0xFF
@@ -63,8 +73,16 @@ struct layer_report {
     char name[LAYER_NAME_LEN];
 } __packed;
 
+struct output_report {
+    uint8_t id;
+    uint8_t selected;
+    uint8_t preferred;
+    uint8_t ble_profile;
+} __packed;
+
 union status_report {
     uint8_t id;
+    struct output_report output;
     struct battery_report battery;
     struct layer_report layer;
 };
@@ -81,11 +99,28 @@ static void send_work_cb(struct k_work *work);
 static K_WORK_DELAYABLE_DEFINE(send_work, send_work_cb);
 
 static size_t report_len(const union status_report *r) {
-    return r->id == REPORT_ID_BATTERY ? sizeof(struct battery_report) : sizeof(struct layer_report);
+    switch (r->id) {
+    case REPORT_ID_BATTERY:
+        return sizeof(struct battery_report);
+    case REPORT_ID_OUTPUT:
+        return sizeof(struct output_report);
+    default:
+        return sizeof(struct layer_report);
+    }
 }
 
 static void make_battery_report(union status_report *r) {
     r->battery = battery_cache;
+}
+
+static void make_output_report(union status_report *r) {
+    struct zmk_endpoint_instance preferred = zmk_endpoint_get_preferred();
+
+    r->output.id = REPORT_ID_OUTPUT;
+    r->output.selected = (uint8_t)zmk_endpoint_get_selected().transport;
+    r->output.preferred = (uint8_t)preferred.transport;
+    r->output.ble_profile =
+        preferred.transport == ZMK_TRANSPORT_BLE ? (uint8_t)preferred.ble.profile_index : 0xFF;
 }
 
 static void make_layer_report(union status_report *r) {
@@ -158,6 +193,9 @@ static int get_report_cb(const struct device *dev, struct usb_setup_packet *setu
     case REPORT_ID_BATTERY:
         make_battery_report(&snapshot);
         break;
+    case REPORT_ID_OUTPUT:
+        make_output_report(&snapshot);
+        break;
     default:
         return -ENOTSUP;
     }
@@ -179,6 +217,9 @@ static void send_full_snapshot(void) {
     queue_report(&r);
 
     make_layer_report(&r);
+    queue_report(&r);
+
+    make_output_report(&r);
     queue_report(&r);
 }
 
@@ -202,6 +243,13 @@ static int status_listener(const zmk_event_t *eh) {
         return ZMK_EV_EVENT_BUBBLE;
     }
 
+    if (as_zmk_endpoint_changed(eh) != NULL) {
+        union status_report r;
+        make_output_report(&r);
+        queue_report(&r);
+        return ZMK_EV_EVENT_BUBBLE;
+    }
+
     const struct zmk_usb_conn_state_changed *usb = as_zmk_usb_conn_state_changed(eh);
     if (usb != NULL && usb->conn_state == ZMK_USB_CONN_HID) {
         send_full_snapshot();
@@ -213,6 +261,7 @@ static int status_listener(const zmk_event_t *eh) {
 ZMK_LISTENER(usb_hid_status, status_listener);
 ZMK_SUBSCRIPTION(usb_hid_status, zmk_peripheral_battery_state_changed);
 ZMK_SUBSCRIPTION(usb_hid_status, zmk_layer_state_changed);
+ZMK_SUBSCRIPTION(usb_hid_status, zmk_endpoint_changed);
 ZMK_SUBSCRIPTION(usb_hid_status, zmk_usb_conn_state_changed);
 
 static int usb_hid_status_init(void) {
